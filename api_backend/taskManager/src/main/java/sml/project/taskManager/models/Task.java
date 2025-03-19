@@ -19,7 +19,7 @@ public class Task {
 
     private String title;
     private String description;
-    private boolean state;
+    private boolean status;
     private Date createdAt;
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
