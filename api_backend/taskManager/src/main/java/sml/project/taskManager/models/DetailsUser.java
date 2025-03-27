@@ -1,14 +1,19 @@
 package sml.project.taskManager.models;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-@AllArgsConstructor
+@NoArgsConstructor
 public class DetailsUser implements UserDetails {
+    public DetailsUser(User user) {
+        this.user = user;
+    }
+
     private User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
