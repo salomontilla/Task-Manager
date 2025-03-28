@@ -16,11 +16,11 @@ import java.time.temporal.ChronoUnit;
 @Component
 public class JwtUtil {
     @Value("${api.security.secret}")
-    private static String apiSecret;
+    private static String SECRET_KEY;
 
     public String generateToken(User user) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(apiSecret);
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             return JWT.create()
                     .withIssuer("Salomontilla")
                     .withSubject(user.getUsername())
@@ -36,20 +36,32 @@ public class JwtUtil {
         return Instant.now().plus(1, ChronoUnit.HOURS);
     }
 
-    public static String validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(apiSecret);
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("Salomontilla")
                     .build();
 
-            DecodedJWT decodedJWT = verifier.verify(token);
+            verifier.verify(token);
+            return true;
+        } catch (JWTVerificationException e) {
+            return false;
+        }
+    }
+    public String extractUsername(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+            DecodedJWT decodedJWT = JWT.require(algorithm)
+                    .withIssuer("Salomontilla")
+                    .build()
+                    .verify(token);
+
             return decodedJWT.getSubject();
 
         } catch (JWTVerificationException e) {
             throw new RuntimeException("Token inválido o expirado", e);
         }
     }
-
 
 }
