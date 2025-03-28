@@ -19,6 +19,18 @@ public class User {
     private String email;
     private String password;
 
+    public User(UserRegisterDTO userRegisterDTO) {
+        this.username = userRegisterDTO.username();
+        this.email = userRegisterDTO.email();
+        this.password = userRegisterDTO.password();
+    }
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Task> tasks;
+
+    public User(String username, String email, String hashedPassword) {
+        this.username = username;
+        this.email = email;
+        this.password = hashedPassword;
+    }
 }
