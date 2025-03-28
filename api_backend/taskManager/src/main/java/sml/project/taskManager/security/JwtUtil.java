@@ -8,7 +8,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import sml.project.taskManager.models.User;
+import sml.project.taskManager.models.DetailsUser;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -16,9 +16,9 @@ import java.time.temporal.ChronoUnit;
 @Component
 public class JwtUtil {
     @Value("${api.security.secret}")
-    private static String SECRET_KEY;
+    private static String SECRET_KEY = "123456";
 
-    public String generateToken(User user) {
+    public String generateToken(DetailsUser user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             return JWT.create()
