@@ -22,10 +22,15 @@ public class UserController {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegisterDTO userDto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity registerUser(@RequestBody UserRegisterDTO userDto, UriComponentsBuilder uriBuilder) {
         String hashedPassword = passwordEncoder.encode(userDto.password());
 
-        // Crear usuario con la contraseña encriptada
+        if (userRepository.existsByUsername(userDto.username())) {
+            return ResponseEntity.badRequest().body("This username is already in use.");
+        }
+        if (userRepository.existsByEmail(userDto.email())) {
+            return ResponseEntity.badRequest().body("This email is already in use.");
+        }
         User newUser = new User(userDto.username(), userDto.email(), hashedPassword);
         userRepository.save(newUser);
         UserResponseDTO userResponse = new UserResponseDTO(newUser.getId(), newUser.getUsername(), newUser.getEmail());
