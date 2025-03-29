@@ -7,12 +7,12 @@ document.getElementById("register_btn").addEventListener("click", async (event) 
     let confirmPassword = document.getElementById("password_confirm_input").value.trim();
 
     if (!username || !password || !confirmPassword || !email) {
-        alert("Por favor, completa todos los campos.");
+        showMessage("Please, fill all fields", "error");
         return;
     }
 
     if (password !== confirmPassword) {
-        alert("Las contraseñas no coinciden.");
+        showMessage("Passwords are not the same.", "error");
         return;
     }
 
@@ -30,10 +30,11 @@ document.getElementById("register_btn").addEventListener("click", async (event) 
             throw new Error("Error en el registro. Inténtalo de nuevo.");
         }
 
-        alert("Registro exitoso. Ahora puedes iniciar sesión.");
+        showMessage("Successfully registered...", "success");
         window.location.href = "./index.html";
 
     } catch (error) {
-        alert(error.message);
+        showMessage(error.message, "error");
     }
 });
+
