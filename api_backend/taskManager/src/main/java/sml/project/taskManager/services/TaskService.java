@@ -16,10 +16,6 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
-    public List<Task> getTasksByUser(User user){
-        return taskRepository.findByUser(user);
-    }
-
     public Task createTask(Long id, Task task) {
         task.setCreatedAt(new Date());
         User user = userRepository.findById(id)
@@ -34,7 +30,7 @@ public class TaskService {
         return task.getCreatedAt();
     }
 
-    public List<Task> getTasksByUserId(User user) {
-        return taskRepository.findByUserId(user.getId());
+    public List<Task> getTasksByUserId(Long id) {
+        return taskRepository.findByUserId(id);
     }
 }
