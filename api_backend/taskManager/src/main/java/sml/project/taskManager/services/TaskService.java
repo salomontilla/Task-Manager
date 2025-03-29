@@ -21,6 +21,7 @@ public class TaskService {
     }
 
     public Task createTask(Long id, Task task) {
+        task.setCreatedAt(new Date());
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         task.setUser(user);
@@ -31,5 +32,9 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
         return task.getCreatedAt();
+    }
+
+    public List<Task> getTasksByUserId(User user) {
+        return taskRepository.findByUserId(user.getId());
     }
 }
