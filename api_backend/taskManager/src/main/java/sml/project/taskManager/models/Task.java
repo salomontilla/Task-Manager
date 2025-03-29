@@ -19,9 +19,16 @@ public class Task {
 
     private String title;
     private String description;
-    private boolean status;
+    private Status status;
     private Date createdAt;
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public Task(TaskDTO task) {
+        this.title = task.title();
+        this.description = task.description();
+        this.status = task.status();
+    }
+
 }
