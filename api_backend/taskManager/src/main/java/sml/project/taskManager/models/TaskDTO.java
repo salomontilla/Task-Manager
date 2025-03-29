@@ -5,6 +5,6 @@ import java.util.Date;
 public record TaskDTO(
         String title,
         String description,
-        Status status
+        String status
 ) {
 }
