@@ -18,12 +18,22 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public ResponseEntity <List<Task>> getTasks(@AuthenticationPrincipal DetailsUser user) {
-        var tasks = taskService.getTasksByUserId(user.getUser());
-        if (tasks.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(tasks);
+    public ResponseEntity <List<TaskResponseDTO>> getTasks(@AuthenticationPrincipal DetailsUser user) {
+        List<Task> tasks = taskService.getTasksByUserId(user.getId());
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<TaskResponseDTO> taskDTOs = tasks.stream().map(task ->
+                new TaskResponseDTO(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getStatus().toString(),
+                        formatter.format(task.getCreatedAt()),
+                        task.getUser().getId()
+                )
+        ).toList();
+
+        return ResponseEntity.ok(taskDTOs);
     }
 
     @PostMapping
