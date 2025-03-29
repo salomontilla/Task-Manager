@@ -8,7 +8,7 @@ async function userLogin(event) {
     let password = document.getElementById("password_input").value.trim();
 
     if (!username || !password) {
-        alert("Por favor, completa todos los campos.");
+        showMessage("Please, fill all fields", "error");
         return;
     }
 
@@ -25,10 +25,11 @@ async function userLogin(event) {
         if (!response.ok) {
             throw new Error("Usuario o contraseña incorrectos");
         }
-
+        showMessage("Successfully Logged in...", "success");
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        window.location.href = "./dashboard.html";  // Redirección al dashboard
+        window.location.href = "./dashboard.html";
+        
 
     } catch (error) {
         alert(error.message);
