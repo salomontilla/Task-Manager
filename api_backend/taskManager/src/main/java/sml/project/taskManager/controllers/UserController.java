@@ -23,7 +23,6 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity registerUser(@RequestBody UserRegisterDTO userDto, UriComponentsBuilder uriBuilder) {
-        String hashedPassword = passwordEncoder.encode(userDto.password());
 
         if (userRepository.existsByUsername(userDto.username())) {
             return ResponseEntity.badRequest().body("This username is already in use.");
@@ -31,6 +30,7 @@ public class UserController {
         if (userRepository.existsByEmail(userDto.email())) {
             return ResponseEntity.badRequest().body("This email is already in use.");
         }
+        String hashedPassword = passwordEncoder.encode(userDto.password());
         User newUser = new User(userDto.username(), userDto.email(), hashedPassword);
         userRepository.save(newUser);
         UserResponseDTO userResponse = new UserResponseDTO(newUser.getId(), newUser.getUsername(), newUser.getEmail());
