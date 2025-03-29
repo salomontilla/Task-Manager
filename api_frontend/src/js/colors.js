@@ -51,34 +51,3 @@ const displayThemeButtons = () => {
 };
 
 displayThemeButtons();
-
-let submitBtn = document.getElementById("submit_btn");
-submitBtn.addEventListener("click",events => {
-    userLogin();
-});
-
-let userLogin = async() =>{
-    event.preventDefault();
-    let fields = {};
-     fields.username = document.getElementById("username_input").value;
-     fields.password = document.getElementById("password_input").value;
-
-     const response = await fetch("http://localhost:8080/auth/login", { 
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(fields)
-    });
-
-    if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        alert("Login exitoso. Redirigiendo...");
-        window.location.href = "./dashboard.html";
-    } else {
-        alert("Usuario o contraseña incorrectos");
-    }
-}
-
