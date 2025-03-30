@@ -16,6 +16,7 @@
                 <li><a href="#">Tasks</a></li>
                 <li><a href="#">Profile</a></li>
                 <li><a href="#">Settings</a></li>
+                <button id="logout_btn">Log out</button>
             </ul>
         </div>
         <div class="main-content">
@@ -38,7 +39,27 @@
                 <tbody>
                 </tbody>
               </table>
+              <div class="task-form-container">
+                <h2>Add Task</h2>
+                <form id="task-form">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+            
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+            
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+            
+                    <button type="submit">Add Task</button>
+                </form>
+            </div>
         </div>
+        
         <script src="/src/js/tasks.js"></script>
     </body>
 </html>
