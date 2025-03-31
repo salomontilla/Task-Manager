@@ -32,6 +32,11 @@ public class Task {
         this.description = task.description();
         this.status = Status.valueOf(task.status());
     }
+    public void updateTask(UpdateTaskDTO task) {
+        this.title = task.title();
+        this.description = task.description();
+        this.status = Status.valueOf(task.status());
+    }
     public void creationDate() {
         this.createdAt = new Date();
     }
