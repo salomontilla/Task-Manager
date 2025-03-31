@@ -60,4 +60,11 @@ public class TaskController {
         return ResponseEntity.status(200).body(new TaskResponseDTO(updatedTask.getId(), updatedTask.getTitle(), updatedTask.getDescription(),
                 updatedTask.getStatus().toString(), formattedDate, updatedTask.getUser().getId()));
     }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
+    }
 }
