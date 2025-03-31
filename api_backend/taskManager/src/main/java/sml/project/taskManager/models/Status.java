@@ -2,6 +2,6 @@ package sml.project.taskManager.models;
 
 public enum Status {
     PENDING,
-    DONE,
+    COMPLETED,
     IN_PROGRESS
 }
