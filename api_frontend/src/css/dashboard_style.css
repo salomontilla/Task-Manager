@@ -121,7 +121,7 @@ table {
   }
   
   tbody td {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 3px solid #0f3460;
   }
   
   td:last-child {
@@ -149,18 +149,16 @@ table {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Asegurar que la tabla ocupe el 100% */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
-/* Ajuste de las celdas */
 th, td {
     padding: 10px;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    white-space: nowrap; /* Evita que el texto se divida */
+    border-bottom: 1px solid #0f3460;
+    white-space: nowrap;
 }
   
   .button {
