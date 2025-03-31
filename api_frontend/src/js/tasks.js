@@ -1,31 +1,21 @@
 const token = localStorage.getItem("token");
-document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", async () => {
     const tablaBody = document.querySelector("#tabla tbody");
 
-    if (!token) {
+    if (!localStorage.getItem("token")) {
         alert("Please log in...");
         window.location.href = "/public/login.html";
         return;
     }
 
-    fetch("http://localhost:8080/tasks", {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Error loading data");
-        }
-        return response.json();
-    })
-    .then(tasks => {
+    try {
+        const tasks = await fetchWithAuth("http://localhost:8080/tasks");
+
         tablaBody.innerHTML = "";
 
-        if (tasks.length === 0) {
-            tablaBody.innerHTML = `<tr ><td colspan="5" style="text-align: center";>You have no pending tasks!</td></tr>`;
+        if (!tasks || tasks.length === 0) {
+            tablaBody.innerHTML = `<tr><td colspan="5" style="text-align: center;">You have no pending tasks!</td></tr>`;
             return;
         }
 
@@ -42,16 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="delete-btn" onclick="deleteTask(${task.id})">🗑️</button>
                 </td>
             `;
-            console.log(row.dataset.taskId);
             tablaBody.appendChild(row);
         });
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        tablaBody.innerHTML = `<tr><td colspan="5" style="text-align: center">There was an error loading tasks</td></tr>`;
-    });
 
+    } catch (error) {
+        console.error("Error:", error);
+        tablaBody.innerHTML = `<tr><td colspan="5" style="text-align: center;">There was an error loading tasks</td></tr>`;
+    }
 });
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const addTaskBtn = document.getElementById("add-btn");
@@ -63,40 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
         const title = document.getElementById("title").value.trim();
         const description = document.getElementById("description").value.trim();
         const status = document.getElementById("status").value.toUpperCase();
-        console.log(status);
-        
 
         if (!title || !description) {
-            alert("Title and description are required!");
+            showMessage("Title and description are required!", "error");
             return;
         }
 
-        const newTask = {
-            title,
-            description,
-            status,
-        };
+        const newTask = { title, description, status };
 
         try {
-            
-            const response = await fetch("http://localhost:8080/tasks", {
+            const data = await fetchWithAuth("http://localhost:8080/tasks", {
                 method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
                 body: JSON.stringify(newTask),
             });
 
-            if (!response.ok) throw new Error("Failed to add task");
-
-            const data = await response.json();
-            alert("Task added successfully!");
+            showMessage("Task added successfully!", "succes");
             taskForm.reset();
             addTaskToTable(data);
         } catch (error) {
             console.error("Error:", error);
-            alert("Error adding task. Please try again.");
+            showMessage("Error adding task. Please try again.", "error");
         }
     });
 });
@@ -163,50 +138,42 @@ function putMethod(taskId) {
 
     editBtn.addEventListener("click", async function (event) {
         event.preventDefault();
-        const id = taskId;
-        const title = document.getElementById("title").value.trim();
-        const description = document.getElementById("description").value.trim();
-        const status = document.getElementById("status").value.toUpperCase();
 
-        if (!title || !description) {
-            alert("Title and description are required!");
+        const updatedTask = {
+            id: taskId,
+            title: document.getElementById("title").value.trim(),
+            description: document.getElementById("description").value.trim(),
+            status: document.getElementById("status").value.toUpperCase(),
+        };
+
+        if (!updatedTask.title || !updatedTask.description) {
+            showMessage("Title and description are required!", "error");
             return;
         }
 
-        const updatedTask = {
-            id,
-            title,
-            description,
-            status,
-        };
-
         try {
-            const response = await fetch("http://localhost:8080/tasks", {
+            await fetchWithAuth("http://localhost:8080/tasks", {
                 method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
                 body: JSON.stringify(updatedTask),
             });
 
-            if (!response.ok) throw new Error("Failed to edit task");
-
-            alert("Task edited successfully!");
+            showMessage("Task edited succesfully!", "success");
             taskForm.reset();
 
+            // Actualizar la fila correspondiente en la tabla
             const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
             if (row) {
-                row.children[1].textContent = title;
-                row.children[2].textContent = description;
-                row.children[3].querySelector("span").textContent = status;
-                row.children[3].querySelector("span").className = `status ${status.toLowerCase()}`;
+                row.children[1].textContent = updatedTask.title;
+                row.children[2].textContent = updatedTask.description;
+                const statusSpan = row.children[3].querySelector("span");
+                statusSpan.textContent = updatedTask.status;
+                statusSpan.className = `status ${updatedTask.status.toLowerCase()}`;
             }
 
-            // Restablece los botones al estado inicial
+            // Restablecer la UI al estado inicial
             document.getElementById("add-btn").style.display = "block";
             editBtn.style.display = "none";
-            document.querySelector(".task-form-container h2").textContent = "Add Task";    
+            document.querySelector(".task-form-container h2").textContent = "Add Task";
 
         } catch (error) {
             console.error("Error:", error);
@@ -221,17 +188,11 @@ async function deleteTask(taskId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/tasks/${taskId}`, {
+        await fetchWithAuth(`http://localhost:8080/tasks/${taskId}`, {
             method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            }
         });
 
-        if (!response.ok) throw new Error("Failed to delete task");
-
-        alert("Task deleted successfully!");
+        showMessage("Task deleted succesfully!", "success");
 
         const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
         if (row) {
