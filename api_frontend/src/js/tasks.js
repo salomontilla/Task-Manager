@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tablaBody.innerHTML = "";
 
         if (tasks.length === 0) {
-            tablaBody.innerHTML = `<tr><td colspan="5">You have no pending tasks!</td></tr>`;
+            tablaBody.innerHTML = `<tr ><td colspan="5" style="text-align: center";>You have no pending tasks!</td></tr>`;
             return;
         }
 
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(error => {
         console.error("Error:", error);
-        tablaBody.innerHTML = `<tr><td colspan="5">There was an error loading tasks</td></tr>`;
+        tablaBody.innerHTML = `<tr><td colspan="5" style="text-align: center">There was an error loading tasks</td></tr>`;
     });
 
 });
@@ -115,4 +115,13 @@ function addTaskToTable(task) {
     `;
 
     tableBody.appendChild(row);
+}
+
+function logout(){
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if(confirmLogout){
+        localStorage.removeItem("token");
+        window.location.href = "/public/login.html";
+    }
+    
 }

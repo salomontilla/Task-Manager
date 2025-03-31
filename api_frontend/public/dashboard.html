@@ -16,29 +16,31 @@
                 <li><a href="#">Tasks</a></li>
                 <li><a href="#">Profile</a></li>
                 <li><a href="#">Settings</a></li>
-                <button id="logout_btn">Log out</button>
+                <button id="logout_btn" onclick=logout()>Log out</button>
             </ul>
         </div>
+       
         <div class="main-content">
             <header>
                 <h1>Welcome!</h1>
             </header>
-            <table id="tabla">
-                <thead>
-                  <tr>
-                    <th colspan="6">Tasks</th>
-                  </tr>
-                  <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
+            <div class="table-container">
+                <table id="tabla">
+                    <thead>
+                        <tr>
+                            <th colspan="5">Tasks</th>
+                        </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
               <div class="task-form-container">
                 <h2>Add Task</h2>
                 <form id="task-form">
