@@ -236,3 +236,26 @@ select:focus {
 select option {
     background-color: #1a1a2e;
 }
+
+.message {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.message.success {
+    background-color: #4CAF50;
+    color: white;
+    opacity: 1;
+}
+
+.message.error {
+    background-color: #FF5733;
+    color: white;
+    opacity: 1;
+}
