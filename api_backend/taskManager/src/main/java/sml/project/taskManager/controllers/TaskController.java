@@ -46,4 +46,15 @@ public class TaskController {
         return ResponseEntity.status(201).body(new TaskResponseDTO(createdTask.getId(), createdTask.getTitle(), createdTask.getDescription(),
                 createdTask.getStatus().toString(), formattedDate, createdTask.getUser().getId()));
     }
+
+    @PutMapping
+    public ResponseEntity<TaskResponseDTO> updateTask(@RequestBody TaskDTO task, @AuthenticationPrincipal DetailsUser user) {
+        Task updatedTask = taskService.updateTask(user.getId(), new Task(task));
+        Date creationDate = taskService.getCreationDate(updatedTask.getId());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = formatter.format(creationDate);
+
+        return ResponseEntity.status(200).body(new TaskResponseDTO(updatedTask.getId(), updatedTask.getTitle(), updatedTask.getDescription(),
+                updatedTask.getStatus().toString(), formattedDate, updatedTask.getUser().getId()));
+    }
 }
