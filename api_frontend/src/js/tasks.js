@@ -194,7 +194,7 @@ function putMethod(taskId) {
 
             alert("Task edited successfully!");
             taskForm.reset();
-            
+
             const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
             if (row) {
                 row.children[1].textContent = title;
@@ -213,4 +213,47 @@ function putMethod(taskId) {
             alert("Error editing task. Please try again.");
         }
     });
+}
+
+async function deleteTask(taskId) {
+    if (!confirm("Are you sure you want to delete this task?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/tasks/${taskId}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to delete task");
+
+        alert("Task deleted successfully!");
+
+        const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+        if (row) {
+            row.remove();
+            updateTaskIndexes();
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error deleting task. Please try again.");
+    }
+}
+
+function updateTaskIndexes() {
+    const rows = document.querySelectorAll("#tabla tbody tr");
+    rows.forEach((row, index) => {
+        row.children[0].textContent = index + 1;
+    });
+
+    if (rows.length === 0) {
+        document.querySelector("#tabla tbody").innerHTML = `
+            <tr><td colspan="5" style="text-align: center;">You have no pending tasks!</td></tr>
+        `;
+    }
 }
