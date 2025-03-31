@@ -31,7 +31,7 @@ document.getElementById("register_btn").addEventListener("click", async (event) 
         }
 
         showMessage("Successfully registered...", "success");
-        window.location.href = "./index.html";
+        window.location.href = "./login.html";
 
     } catch (error) {
         showMessage(error.message, "error");

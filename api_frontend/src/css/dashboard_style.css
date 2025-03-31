@@ -93,7 +93,6 @@ table {
     border-spacing: 0;
     border: 2px solid #0f3460;
     width: 500px;
-    margin: 50px auto;
     border-radius: .25rem;
   }
   
@@ -129,6 +128,40 @@ table {
     text-align: right;
     padding-right: 10px;
   }
+  .table-container {
+    max-height: 400px; 
+    overflow-y: auto; 
+    overflow-x: auto; 
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: none; 
+    border-radius: 5px;
+}
+.table-container::-webkit-scrollbar {
+    width: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+.table-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Asegurar que la tabla ocupe el 100% */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Ajuste de las celdas */
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    white-space: nowrap; /* Evita que el texto se divida */
+}
   
   .button {
     color: #aaa;
