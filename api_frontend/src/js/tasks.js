@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(newTask),
             });
 
-            showMessage("Task added successfully!", "succes");
+            showMessage("Task added successfully!", "success");
             taskForm.reset();
             addTaskToTable(data);
         } catch (error) {
