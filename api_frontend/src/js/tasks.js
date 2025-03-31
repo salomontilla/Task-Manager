@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!token) {
         alert("Please log in...");
-        window.location.href = "login.html";
+        window.location.href = "/public/login.html";
         return;
     }
 
@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tasks.forEach((task, index) => {
             const row = document.createElement("tr");
+            row.dataset.taskId = task.id;
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${task.title}</td>
@@ -41,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="delete-btn" onclick="deleteTask(${task.id})">🗑️</button>
                 </td>
             `;
+            console.log(row.dataset.taskId);
             tablaBody.appendChild(row);
         });
     })
@@ -52,9 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    const addTaskBtn = document.getElementById("add-btn");
     const taskForm = document.getElementById("task-form");
 
-    taskForm.addEventListener("submit", async function (event) {
+    addTaskBtn.addEventListener("click", async function (event) {
         event.preventDefault();
 
         const title = document.getElementById("title").value.trim();
@@ -103,6 +106,7 @@ function addTaskToTable(task) {
     const index = document.querySelectorAll("#tabla tbody tr").length;
     const tableBody = document.querySelector("#tabla tbody");
     const row = document.createElement("tr");
+
     row.innerHTML = `
         <td>${index + 1}</td>
                 <td>${task.title}</td>
@@ -124,4 +128,89 @@ function logout(){
         window.location.href = "/public/login.html";
     }
     
+}
+
+function editTask(taskId) {
+    const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+    if (!row) {
+        console.error("Task row not found.");
+        return;
+    }
+
+    console.log(row);
+
+    const title = row.children[1].textContent;
+    const description = row.children[2].textContent;
+    const status = row.children[3].querySelector("span").textContent.toLowerCase();
+
+    document.getElementById("title").value = title;
+    document.getElementById("description").value = description;
+    document.getElementById("status").value = status;
+
+    // Cambia el título del formulario
+    document.querySelector(".task-form-container h2").textContent = "Edit Task";    
+
+    // Oculta el botón "Add Task" y muestra "Edit Task"
+    document.getElementById("add-btn").style.display = "none";
+    document.getElementById("edit-btn").style.display = "block";
+
+    putMethod(taskId);
+}
+
+function putMethod(taskId) {
+    const editBtn = document.getElementById("edit-btn");
+    const taskForm = document.getElementById("task-form");
+
+    editBtn.addEventListener("click", async function (event) {
+        event.preventDefault();
+        const id = taskId;
+        const title = document.getElementById("title").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const status = document.getElementById("status").value.toUpperCase();
+
+        if (!title || !description) {
+            alert("Title and description are required!");
+            return;
+        }
+
+        const updatedTask = {
+            id,
+            title,
+            description,
+            status,
+        };
+
+        try {
+            const response = await fetch("http://localhost:8080/tasks", {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedTask),
+            });
+
+            if (!response.ok) throw new Error("Failed to edit task");
+
+            alert("Task edited successfully!");
+            taskForm.reset();
+            
+            const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+            if (row) {
+                row.children[1].textContent = title;
+                row.children[2].textContent = description;
+                row.children[3].querySelector("span").textContent = status;
+                row.children[3].querySelector("span").className = `status ${status.toLowerCase()}`;
+            }
+
+            // Restablece los botones al estado inicial
+            document.getElementById("add-btn").style.display = "block";
+            editBtn.style.display = "none";
+            document.querySelector(".task-form-container h2").textContent = "Add Task";    
+
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error editing task. Please try again.");
+        }
+    });
 }
