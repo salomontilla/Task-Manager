@@ -3,6 +3,7 @@ package sml.project.taskManager.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import sml.project.taskManager.models.*;
 import sml.project.taskManager.services.TaskService;
@@ -48,8 +49,10 @@ public class TaskController {
     }
 
     @PutMapping
-    public ResponseEntity<TaskResponseDTO> updateTask(@RequestBody TaskDTO task, @AuthenticationPrincipal DetailsUser user) {
-        Task updatedTask = taskService.updateTask(user.getId(), new Task(task));
+    @Transactional
+    public ResponseEntity<TaskResponseDTO> updateTask(@RequestBody UpdateTaskDTO task) {
+        Task updatedTask = taskService.getTaskById(task.id());
+        updatedTask.updateTask(task);
         Date creationDate = taskService.getCreationDate(updatedTask.getId());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = formatter.format(creationDate);
