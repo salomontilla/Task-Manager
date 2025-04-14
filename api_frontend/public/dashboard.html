@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="/src/css/dashboard_style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=edit" />
+    
+</head>
+    <body>
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Tasks</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Settings</a></li>
+                <button id="logout_btn" onclick=logout()>Log out</button>
+            </ul>
+        </div>
+       
+        <div class="main-content">
+            <header>
+                <h1>Welcome!</h1>
+            </header>
+            <div class="table-container">
+                <table id="tabla">
+                    <thead>
+                        <tr>
+                            <th colspan="5">Tasks</th>
+                        </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+              <div class="task-form-container">
+                <h2>Add Task</h2>
+                <form id="task-form">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+            
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+            
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <div id="message" class="message"></div>
+                    <button type="submit" id="add-btn">Add Task</button>
+                    <button type="submit" id="edit-btn" style="display: none;">Edit Task</button>
+
+                </form>
+            </div>
+        </div>
+        
+        <script src="/src/js/tasks.js"></script>
+        <script src="/src/js/utils.js"></script>
+    </body>
+</html>

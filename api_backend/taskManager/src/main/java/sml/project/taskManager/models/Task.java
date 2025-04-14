@@ -19,9 +19,26 @@ public class Task {
 
     private String title;
     private String description;
-    private boolean state;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public Task(TaskDTO task) {
+        this.title = task.title();
+        this.description = task.description();
+        this.status = Status.valueOf(task.status());
+    }
+    public void updateTask(UpdateTaskDTO task) {
+        this.title = task.title();
+        this.description = task.description();
+        this.status = Status.valueOf(task.status());
+    }
+    public void creationDate() {
+        this.createdAt = new Date();
+    }
+
 }
